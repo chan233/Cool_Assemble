@@ -25,7 +25,10 @@ def readArm32Reg(mu):
     print("=======readArm32Reg==========")
     for i in range(arm_const.UC_ARM_REG_R0,arm_const.UC_ARM_REG_R8+1):
         print("R%d : %s" %(i-66,mu.reg_read(i)))
-
+    
+    print("SP : %x" %(mu.reg_read(arm_const.UC_ARM_REG_SP)))
+    print("PC : %x" %(mu.reg_read(arm_const.UC_ARM_REG_PC)))
+    print("LR : %x" %(mu.reg_read(arm_const.UC_ARM_REG_LR)))
 
 
 
@@ -73,6 +76,7 @@ def emulibc():
     # CODE = b'\x0a\x46\x35\x46'
     ADDRESS = 0x1000 # 必须是二的次方
     SIZE = 0x1000 # 必须是二的次方
+    SP = ADDRESS+SIZE -1
     mu = Uc(UC_ARCH_ARM,UC_MODE_THUMB)
     mu.mem_map(address=ADDRESS,size=SIZE)
     
@@ -92,6 +96,7 @@ def emulibc():
     mu.reg_write(arm_const.UC_ARM_REG_R2,0x2);
     mu.reg_write(arm_const.UC_ARM_REG_R5,0x5);
     mu.reg_write(arm_const.UC_ARM_REG_R6,0x6);
+    mu.reg_write(arm_const.UC_ARM_REG_SP,SP);
     try:
         mu.emu_start(ADDRESS,ADDRESS+len(CODE))
     except UcError as e:
